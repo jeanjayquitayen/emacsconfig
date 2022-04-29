@@ -34,7 +34,7 @@
 (add-to-list 'default-frame-alist
              '(font . "Roboto Mono Light"))
 
-(org-babel-load-file (expand-file-name "~/Dev/Configs/dotfiles/emacs/emacsconfig.org"))
+(org-babel-load-file (expand-file-name "~/.emacs.d/emacsconfig.org"))
 ;;(global-display-line-numbers-mode)
 
 

@@ -1,0 +1,6 @@
+.cache/
+elpa/
+emacsconfig.el
+projectile-bookmarks.eld
+recentf
+transient/

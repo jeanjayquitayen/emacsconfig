@@ -458,14 +458,14 @@
    #+begin_src emacs-lisp
      (defun config-visit()
        (interactive)
-       (find-file "~/Dev/Configs/dotfiles/emacs/emacsconfig.org"))
+       (find-file "~/.emacs.d/emacsconfig.org"))
      (global-set-key (kbd "C-c e") 'config-visit)
    #+end_src
 ** reload
    #+begin_src emacs-lisp
           (defun config-reload ()
             (interactive)
-            (org-babel-load-file (expand-file-name "~/Dev/Configs/dotfiles/emacs/emacsconfig.org")))
+            (org-babel-load-file (expand-file-name "~/.emacs.d/emacsconfig.org")))
           (global-set-key (kbd "C-c r") 'config-reload)
    #+end_src
 
