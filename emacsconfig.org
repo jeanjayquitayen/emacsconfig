@@ -1,0 +1,968 @@
+* General
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (auto-save-mode -1)
+  (setq make-backup-files -1)
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+
+#+end_src
+* Terminal
+** shell zsh
+   #+begin_src emacs-lisp
+     (defvar my-term-shell "/usr/bin/zsh")
+     (defadvice ansi-term (before force-bash)
+       (interactive (list my-term-shell)))
+     (ad-activate 'ansi-term)
+     (global-set-key (kbd "C-c t") 'ansi-term)
+
+   #+end_src
+* Startup-screen
+#+begin_src emacs-lisp
+  (setq initial-major-mode (quote fundamental-mode))
+  (setq inhibit-startup-message t
+        initial-buffer-choice nil)
+  (setq ring-bell-function 'ignore)
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (use-package async
+    :ensure t
+    :init (dired-async-mode 1))
+
+#+end_src
+* Projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :init
+      (projectile-mode 1))
+  (global-set-key (kbd "<f5>") 'projectile-compile-project)
+#+end_src
+* Dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+      (dashboard-setup-startup-hook)
+      (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
+      (setq dashboard-items '((recents  . 5)
+                              (projects . 5)))
+      (setq dashboard-banner-logo-title ""))
+#+end_src
+* Scrolling
+#+begin_src emacs-lisp
+  (setq scroll-conservatively 100)
+#+end_src
+* show pair parens
+#+begin_src emacs-lisp
+  (show-paren-mode 1)
+#+end_src
+* Swiper
+#+begin_src emacs-lisp
+  (use-package swiper
+    :ensure t
+    :bind ("C-s" . 'swiper))
+#+end_src
+* Spaceline
+#+begin_src emacs-lisp
+  (use-package spaceline
+    :ensure t
+    :config
+    (require 'spaceline-config)
+      (setq spaceline-buffer-encoding-abbrev-p nil)
+      (setq spaceline-line-column-p nil)
+      (setq spaceline-line-p nil)
+      (setq powerline-default-separator (quote arrow))
+      (spaceline-spacemacs-theme))
+#+end_src
+* Org Mode
+** Bullets
+*** Install
+   #+begin_src emacs-lisp
+     (use-package org-bullets
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
+   #+end_src
+** Configure
+   #+begin_src emacs-lisp
+     (setq org-hide-leeading-start nil)
+     (setq org-superstar-leading-bullet ?\s)
+     (setq org-todo-keywords
+	   '(
+	     (sequence "IDEA(i)" "TODO(t)" "STARTED(s)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)")
+	     (sequence "|" "CANCELED(c)" "DELEGATED(l)" "SOMEDAY(f)")
+	     ))
+
+     (setq org-todo-keyword-faces
+	   '(("IDEA" . (:foreground "GoldenRod" :weight bold))
+	     ("NEXT" . (:foreground "IndianRed1" :weight bold))
+	     ("STARTED" . (:foreground "OrangeRed" :weight bold))
+	     ("WAITING" . (:foreground "coral" :weight bold))
+	     ("CANCELED" . (:foreground "LimeGreen" :weight bold))
+	     ("DELEGATED" . (:foreground "LimeGreen" :weight bold))
+	     ("SOMEDAY" . (:foreground "LimeGreen" :weight bold))
+	     ))
+
+     (setq org-tag-persistent-alist
+	   '((:startgroup . nil)
+	     ("HOME" . ?h)
+	     ("RESEARCH" . ?r)
+	     ("TEACHING" . ?t)
+	     (:endgroup . nil)
+	     (:startgroup . nil)
+	     ("OS" . ?o)
+	     ("DEV" . ?d)
+	     ("WWW" . ?w)
+	     (:endgroup . nil)
+	     (:startgroup . nil)
+	     ("EASY" . ?e)
+	     ("MEDIUM" . ?m)
+	     ("HARD" . ?a)
+	     (:endgroup . nil)
+	     ("UCANCODE" . ?c)
+	     ("URGENT" . ?u)
+	     ("KEY" . ?k)
+	     ("BONUS" . ?b)
+	     ("noexport" . ?x)
+	     )
+	   )
+
+     (setq org-tag-faces
+	   '(
+	     ("HOME" . (:foreground "GoldenRod" :weight bold))
+	     ("RESEARCH" . (:foreground "GoldenRod" :weight bold))
+	     ("TEACHING" . (:foreground "GoldenRod" :weight bold))
+	     ("OS" . (:foreground "IndianRed1" :weight bold))
+	     ("DEV" . (:foreground "IndianRed1" :weight bold))
+	     ("WWW" . (:foreground "IndianRed1" :weight bold))
+	     ("URGENT" . (:foreground "Red" :weight bold))
+	     ("KEY" . (:foreground "Red" :weight bold))
+	     ("EASY" . (:foreground "OrangeRed" :weight bold))
+	     ("MEDIUM" . (:foreground "OrangeRed" :weight bold))
+	     ("HARD" . (:foreground "OrangeRed" :weight bold))
+	     ("BONUS" . (:foreground "GoldenRod" :weight bold))
+	     ("UCANCODE" . (:foreground "GoldenRod" :weight bold))
+	     ("noexport" . (:foreground "LimeGreen" :weight bold))
+	     )
+     )
+   #+end_src
+** Exporting
+* Beacon
+  #+begin_src emacs-lisp
+    (use-package beacon
+      :ensure t
+      :init
+      (beacon-mode 1))
+  #+end_src
+* Which-key
+  #+begin_src emacs-lisp
+    (use-package which-key
+      :ensure t
+      :init
+      (which-key-mode))
+  #+end_src
+* Tree-macs
+  #+begin_src emacs-lisp
+    ;;(use-package treemacs
+    ;;  :ensure t
+    ;;  :init
+    ;;  (setq treemacs-is-treemacs-window t)
+    ;;  :config
+    ;;  (add-hook 'emacs-startup-hook 'treemacs))
+    (use-package treemacs
+      :ensure t
+      :defer t
+      :hook (window-setup . treemacs)
+      :init
+      (with-eval-after-load 'winum
+        (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+      :config
+      (progn
+        (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+              treemacs-deferred-git-apply-delay        0.5
+              treemacs-directory-name-transformer      #'identity
+              treemacs-display-in-side-window          t
+              treemacs-eldoc-display                   'simple
+              treemacs-file-event-delay                5000
+              treemacs-file-extension-regex            treemacs-last-period-regex-value
+              treemacs-file-follow-delay               0.2
+              treemacs-file-name-transformer           #'identity
+              treemacs-follow-after-init               t
+              treemacs-expand-after-init               t
+              treemacs-find-workspace-method           'find-for-file-or-pick-first
+              treemacs-git-command-pipe                ""
+              treemacs-goto-tag-strategy               'refetch-index
+              treemacs-indentation                     2
+              treemacs-indentation-string              " "
+              treemacs-is-never-other-window           nil
+              treemacs-max-git-entries                 5000
+              treemacs-missing-project-action          'ask
+              treemacs-move-forward-on-expand          nil
+              treemacs-no-png-images                   nil
+              treemacs-no-delete-other-windows         t
+              treemacs-project-follow-cleanup          nil
+              treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+              treemacs-position                        'left
+              treemacs-read-string-input               'from-child-frame
+              treemacs-recenter-distance               0.1
+              treemacs-recenter-after-file-follow      nil
+              treemacs-recenter-after-tag-follow       nil
+              treemacs-recenter-after-project-jump     'always
+              treemacs-recenter-after-project-expand   'on-distance
+              treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+              treemacs-show-cursor                     nil
+              treemacs-show-hidden-files               t
+              treemacs-silent-filewatch                nil
+              treemacs-silent-refresh                  nil
+              treemacs-sorting                         'alphabetic-asc
+              treemacs-select-when-already-in-treemacs 'move-back
+              treemacs-space-between-root-nodes        t
+              treemacs-tag-follow-cleanup              t
+              treemacs-tag-follow-delay                1.5
+              treemacs-text-scale                      nil
+              treemacs-user-mode-line-format           nil
+              treemacs-user-header-line-format         nil
+              treemacs-wide-toggle-width               70
+              treemacs-width                           35
+              treemacs-width-increment                 1
+              treemacs-width-is-initially-locked       t
+              treemacs-workspace-switch-cleanup        nil)
+
+        ;; The default width and height of the icons is 22 pixels. If you are
+        ;; using a Hi-DPI display, uncomment this to double the icon size.
+        ;;(treemacs-resize-icons 44)
+
+        (treemacs-follow-mode t)
+        (treemacs-filewatch-mode t)
+        (treemacs-fringe-indicator-mode 'always)
+
+        (pcase (cons (not (null (executable-find "git")))
+                     (not (null treemacs-python-executable)))
+          (`(t . t)
+           (treemacs-git-mode 'deferred))
+          (`(t . _)
+           (treemacs-git-mode 'simple)))
+
+        (treemacs-hide-gitignored-files-mode nil))
+      :bind
+      (:map global-map
+            ("M-0"       . treemacs-select-window)
+            ("C-x t 1"   . treemacs-delete-other-windows)
+            ("C-x t t"   . treemacs)
+            ("C-x t d"   . treemacs-select-directory)
+            ("C-x t B"   . treemacs-bookmark)
+            ("C-x t C-t" . treemacs-find-file)
+            ("C-x t M-t" . treemacs-find-tag)))
+
+    (use-package treemacs-evil
+      :after (treemacs evil)
+      :ensure t)
+
+    (use-package treemacs-projectile
+      :after (treemacs projectile)
+      :ensure t)
+
+    (use-package treemacs-icons-dired
+      :hook (dired-mode . treemacs-icons-dired-enable-once)
+      :ensure t)
+
+    (use-package treemacs-magit
+      :after (treemacs magit)
+      :ensure t)
+  #+end_src
+* Avy
+  #+begin_src emacs-lisp
+    (use-package avy
+      :ensure t
+      :bind
+      ("M-s" . avy-goto-char))
+  #+end_src
+* Ace-window
+  #+begin_src emacs-lisp
+    ;; (use-package ace-window
+    ;;   :ensure t
+    ;;   :bind
+    ;;   ("M-o" . ace-window))
+  #+end_src
+* Magit
+  #+begin_src emacs-lisp
+    (use-package magit
+      :ensure t)
+  #+end_src
+* Graphiz
+** install from system
+  #+begin_src shell
+    pacman -S graphviz
+  #+end_src
+* Plantuml
+  #+begin_src emacs-lisp
+    (use-package plantuml-mode
+      :ensure t)
+    (setq org-plantuml-jar-path (expand-file-name "~/.config/plantuml.jar"))
+    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+    (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+    (org-babel-do-load-languages 'org-babel-load-languages '((shell . t)))
+  #+end_src
+* Htmlize
+#+begin_src emacs-lisp
+  (use-package htmlize
+    :ensure t)
+#+end_src
+
+#+RESULTS:
+* Evil
+  #+begin_src emacs-lisp
+        (use-package evil
+          :ensure t
+          :init
+          (setq evil-want-C-i-jump nil)
+          :config
+          (evil-mode 1))
+        (setq x-select-enable-clipboard nil)
+  #+end_src
+* Flycheck
+  #+begin_src emacs-lisp
+    (use-package flycheck
+      :ensure t
+      :init (global-flycheck-mode)
+      :config
+      (setq-default indent-tabs-mode nil)
+      (add-hook 'python-mode-hook 'flycheck-mode)
+      (add-hook 'python-mode-hook
+		(lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
+  #+end_src
+
+* Copy-pase from clipboard
+#+begin_src emacs-lisp
+  (defun paste-from-clipboard ()
+    (interactive)
+    (setq x-select-enable-clipboard t)
+    (yank)
+    (setq x-select-enable-clipboard nil))
+
+  (defun copy-to-clipboard()
+    (interactive)
+    (setq x-select-enalbe-clipboard t)
+    (kill-ring-save (region-beginning) (region-end))
+    (setq x-select-enable-clipboard nil))
+
+  (global-set-key (kbd "C-S-p") 'paste-from-clipboard)
+  (global-set-key (kbd "C-S-c") 'copy-to-clipboard)
+#+end_src
+
+* Ido
+  #+begin_src emacs-lisp
+    ;;(setq ido-enable-flex-matching nil)
+    ;;(setq ido-create-new-buffer 'always)
+    ;;(setq ido-everywhere t)
+    ;; (ido-mode -1)
+  #+end_src
+** Ido Vertical
+   ;; #+begin_src emacs-lisp
+   ;;   (use-package ido-vertical-mode
+   ;;     :ensure t
+   ;;     :init
+   ;;     (ido-vertical-mode 1))
+   ;; #+end_src
+
+** ido-switch-buffers
+   #+begin_src emacs-lisp
+     ;; (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
+   #+end_src
+
+* Buffers
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-x b") 'ibuffer)
+    (defun kill-current-buffer ()
+      "Kills the current buffer."
+      (interactive)
+      (kill-buffer (current-buffer)))
+    (global-set-key (kbd "C-x k") 'kill-current-buffer)
+    (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+    (defun close-all-buffers ()
+      "Kill all buffers without regard for their origin."
+      (interactive)
+      (mapc 'kill-buffer (buffer-list)))
+    (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
+  #+end_src
+** expert mode
+   #+begin_src emacs-lisp
+     (setq ibuffer-expert t)
+   #+end_src
+
+* Line number programming
+#+begin_src emacs-lisp
+  ;;(use-package linum-relative
+  ;;  :ensure t
+  ;;  :config
+  ;;    (setq linum-relative-current-symbol "")
+  ;;    (add-hook 'prog-mode-hook 'linum-relative-mode))
+  (add-hook 'prog-mode-hook 'linum-mode)
+#+end_src
+
+* Hel
+#+begin_src emacs-lisp
+  (use-package helm
+    :ensure t
+    :bind
+    ("C-x C-f" . 'helm-find-files)
+    ("C-x C-b" . 'helm-buffers-list)
+    ("M-x" . 'helm-M-x)
+    :config
+    (defun daedreth/helm-hide-minibuffer ()
+      (when (with-helm-buffer helm-echo-input-in-header-line)
+        (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+          (overlay-put ov 'window (selected-window))
+          (overlay-put ov 'face
+                       (let ((bg-color (face-background 'default nil)))
+                         `(:background ,bg-color :foreground ,bg-color)))
+          (setq-local cursor-type nil))))
+    (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
+    (setq helm-autoresize-max-height 0
+          helm-autoresize-min-height 40
+          helm-M-x-fuzzy-match t
+          helm-buffers-fuzzy-matching t
+          helm-recentf-fuzzy-match t
+          helm-semantic-fuzzy-match t
+          helm-imenu-fuzzy-match t
+          helm-split-window-in-side-p nil
+          helm-move-to-line-cycle-in-source nil
+          helm-ff-search-library-in-sexp t
+          helm-scroll-amount 8
+          helm-echo-input-in-header-line t)
+    :init
+    (helm-mode 1))
+
+  (require 'helm-config)
+  (helm-autoresize-mode 1)
+  (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+  (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+#+end_src
+
+* Mark Multiple
+#+begin_src emacs-lisp
+  (use-package mark-multiple
+    :ensure t
+    :bind ("C-c q" . 'mark-next-like-this))
+#+end_src
+* Config edit/reload
+** edit
+   #+begin_src emacs-lisp
+     (defun config-visit()
+       (interactive)
+       (find-file "~/Dev/Configs/dotfiles/emacs/emacsconfig.org"))
+     (global-set-key (kbd "C-c e") 'config-visit)
+   #+end_src
+** reload
+   #+begin_src emacs-lisp
+          (defun config-reload ()
+            (interactive)
+            (org-babel-load-file (expand-file-name "~/Dev/Configs/dotfiles/emacs/emacsconfig.org")))
+          (global-set-key (kbd "C-c r") 'config-reload)
+   #+end_src
+
+* Switch-windw
+  #+begin_src emacs-lisp
+    (use-package switch-window
+      :ensure t
+      :config
+      (setq switch-window-input-style 'minibuffer)
+      (setq switch-window-increase 4)
+      (setq switch-window-threshold 2)
+      (setq switch-window-shortcut-style 'qwerty)
+      (setq swtich-window-qwerty-shortcuts
+            '("a" "s" "d" "f" "j" "k"))
+      :bind
+      ([remap other-window] . switch-window))
+  #+end_src
+
+* Auto virutalenv
+  #+begin_src emacs-lisp
+    ;; (use-package auto-virtualenv
+    ;;   :ensure t
+    ;;   :config
+    ;;     (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+    ;;     (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv))
+  #+end_src
+
+* Python
+  #+begin_src emacs-lisp
+    ;;(use-package elpy
+    ;;  :init
+    ;;  (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+    ;;  :custom
+    ;;  (elpy-rpc-backend "jedi"))
+
+    ;;(use-package python
+    ;;:ensure nil
+    ;;:mode ("\\.py" . python-mode)
+    ;;:config
+    ;;(setq python-indent-offset 4)
+    ;;(elpy-enable))
+    ;;
+    ;;(use-package company
+    ;;  :ensure t
+    ;;  :defer t
+    ;;  :diminish (company-mode . " ⓐ")
+    ;;  :init
+    ;;  (global-company-mode)
+    ;;  :config
+    ;;  (setq company-tooltip-align-annotations t
+    ;;        company-idle-delay 0.2
+    ;;        ;; min prefix of 2 chars
+    ;;        company-minimum-prefix-length 2
+    ;;        company-require-match nil))
+    ;;
+    ;;(use-package company-quickhelp          ; Show help in tooltip
+    ;;  :ensure t
+    ;;  :defer t
+    ;;  :init (with-eval-after-load 'company
+    ;;          (company-quickhelp-mode)))
+    ;;
+    ;;(use-package company-jedi
+    ;;  :ensure t
+    ;;  :defer t
+    ;;  :init
+    ;;  (defun enable-jedi()
+    ;;    (setq-local company-backends
+    ;;                (append '(company-jedi) company-backends)))
+    ;;  (with-eval-after-load 'company
+    ;;    (add-hook 'python-mode-hook 'enable-jedi)))
+    ;;
+    ;;;; (use-package pipenv
+    ;;;;   :hook (python-mode .pipenv-mode)
+    ;;;;   :init
+    ;;;;   (setq
+    ;;;;    pipenv-projectile-after-switch-function
+    ;;;;    #'pipenv-projectile-after-switch-extended))
+    ;;
+    ;;(use-package pyvenv
+    ;;  :ensure t
+    ;;  :config
+    ;;  (pyvenv-mode 1))
+    ;;(use-package poetry
+    ;; :ensure t)
+
+  #+end_src
+
+* C/C+
+#+begin_src emacs-lisp
+  (add-hook 'c++-mode-hook 'yas-minor-mode)
+  (add-hook 'c-mode-hook 'yas-minor-mode)
+
+  (use-package flycheck-clang-analyzer
+    :ensure t
+    :config
+    (with-eval-after-load 'flycheck
+      (require 'flycheck-clang-analyzer)
+       (flycheck-clang-analyzer-setup)))
+
+  (with-eval-after-load 'company
+    (add-hook 'c++-mode-hook 'company-mode)
+    (add-hook 'c-mode-hook 'company-mode))
+
+  (use-package company-c-headers
+    :ensure t)
+
+  (use-package company-irony
+    :ensure t
+    :config
+    (setq company-backends '((company-c-headers
+                              company-dabbrev-code
+                              company-irony))))
+
+  (use-package irony
+    :ensure t
+    :config
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+#+end_src
+* Minted
+  #+begin_src emacs-lisp
+    ;; Use minted
+    (add-to-list 'org-latex-packages-alist '("" "minted"))
+    (setq org-latex-listings 'minted)
+
+    ;; Add the shell-escape flag
+    (setq org-latex-pdf-process '(
+                                  "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                                  ;; "bibtex %b"
+                                  "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                                  "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                                  ))
+
+    ;; Sample minted options.
+    (setq org-latex-minted-options '(
+                                     ("frame" "lines")
+                                     ;;("fontsize" "\\scriptsize")
+                                     ("xleftmargin" "\\parindent")
+                                     ;;("linenos" "")
+                                     ))
+  #+end_src
+
+* Latex
+  #+begin_src emacs-lisp
+    ;;LaTex
+    (add-hook 'LaTeX-mode-hook
+            (lambda ()
+                (setq TeX-auto-untabify t     ; remove all tabs before saving
+                    TeX-engine 'xetex       ; use xelatex default
+                    TeX-show-compilation t  ; display compilation windows
+                    TeX-command-extra-options . "-shell-escape") ; add -shell-escape
+                (TeX-global-PDF-mode t)       ; PDF mode enable, not plain
+                (setq TeX-save-query nil)
+                (imenu-add-menubar-index)
+                (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)))
+  #+end_src
+
+* Strip white space
+  #+begin_src emacs-lisp
+    (global-visual-line-mode 1)
+    (global-whitespace-mode 1)
+    ;; see the apropos entry for whitespace-style
+    (setq
+       whitespace-style
+       '(face ; viz via faces
+         trailing ; trailing blanks visualized
+         lines-tail ; lines beyond
+                    ;whitespace-line-column
+         space-before-tab
+         space-after-tab
+         newline ; lines with only blanks
+         indentation ; spaces used for indent
+                     ; when config wants tabs
+         empty ; empty lines at beginning or end
+         )
+       whitespace-line-column 100 ; column at which
+            ; whitespace-mode says the line is too long
+    )
+  #+end_src
+
+* Show Parenthesis match
+  #+begin_src emacs-lisp
+    (show-paren-mode 1)
+  #+end_src
+
+* No Separator
+#+begin_src emacs-lisp
+  (setq powerline-default-separator nil)
+#+end_src
+* Clock
+#+begin_src emacs-lisp
+  (setq display-time-24hr-format t)
+  (setq display-time-format "%H:%M - %d %B %Y")
+  (display-time-mode 1)
+#+end_src
+* Battery Indicato
+#+begin_src emacs-lisp
+  (use-package fancy-battery
+    :ensure t
+    :config
+      (setq fancy-battery-show-percentage t)
+      (setq battery-update-interval 15)
+      (if window-system
+        (fancy-battery-mode)
+        (display-battery-mode)))
+#+end_src
+* GO Coding
+  #+begin_src emacs-lisp
+    (use-package go-mode
+      :ensure t)
+    (use-package ob-go
+      :ensure t
+      :config
+        (org-babel-do-load-languages
+        'org-babel-load-languages
+            '((go . t))))
+    (add-hook 'go-mode-hook (lambda ()
+        (setq tab-width 4)))
+
+    (use-package protobuf-mode
+      :ensure t)
+
+    (defconst my-protobuf-style
+    '((c-basic-offset . 2)
+        (indent-tabs-mode . nil)))
+
+    (add-hook 'protobuf-mode-hook
+    (lambda () (c-add-style "my-style" my-protobuf-style t)))
+  #+end_src
+
+* Yasnippet
+  #+begin_src emacs-lisp
+    (use-package yasnippet
+      :ensure t
+      :config
+      (yas-global-mode 1))
+
+  #+end_src
+
+* Flyspell
+  #+begin_src emacs-lisp
+
+    ;;; FOR FLYSPELL MODE ;;;
+    (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." t)
+
+    ;;; Add hooks for common programming languages
+    (add-hook 'c-mode-common-hook 'flyspell-prog-mode)
+    (add-hook 'c++-mode-common-hook 'flyspell-prog-mode)
+    (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
+    (add-hook 'html-mode-hook 'flyspell-prog-mode)
+    (add-hook 'java-mode-hook 'flyspell-prog-mode)
+    (add-hook 'javascript-mode-hook 'flyspell-prog-mode)
+    (add-hook 'latex-mode-hook 'flyspell-prog-mode)
+    (add-hook 'message-mode-hook 'turn-on-flyspell)
+    (add-hook 'pearl-mode-hook 'flyspell-prog-mode)
+    (add-hook 'prolog-mode-hook 'flyspell-prog-mode)
+    (add-hook 'python-mode-hook 'flyspell-prog-mode)
+    (add-hook 'text-mode-hook 'turn-on-flyspell)
+
+    ;;; Force flyspell mode in non-programming modes
+    (defun turn-on-flyspell ()
+       "Force flyspell-mode on using a positive arg.  For use in hooks."
+       (interactive)
+       (flyspell-mode 1))
+
+    ;;; END OF CODE FOR FLYSPELL MODE;;;
+  #+end_src
+
+* OX-Reveal
+  #+begin_src emacs-lisp
+    (use-package ox-reveal
+      :ensure t
+      :config
+        (setq Org-Reveal-root "file:///home/cyborg/reveal.js")
+        (setq Org-Reveal-title-slide nil))
+  #+end_src
+
+* Pytest
+  #+begin_src emacs-lisp
+    ;; (use-package python-pytest
+    ;;   :after python
+    ;;   :custom
+    ;;   (python-pytest-arguments
+    ;;    '("--color"          ;; colored output in the buffer
+    ;;      "--failed-first"   ;; run the previous failed tests first
+    ;;      "--maxfail=5"))   ;; exit in 5 continuous failures in a run
+    ;; )
+    ;; (add-hook 'python-mode-hook
+    ;;           (lambda ()
+    ;;             (when-let ((r (locate-dominating-file default-directory ".pyroot")))
+    ;;               (setq python-pytest-executable
+    ;;                     (concat "PYTHONPATH=" r " " "pytest")))))
+  #+end_src
+
+  #+RESULTS:
+  | (lambda nil (when-let ((r (locate-dominating-file default-directory .pyroot))) (setq python-pytest-executable (concat PYTHONPATH= r   pytest)))) | (lambda nil (let* ((r (and t (locate-dominating-file default-directory .pyroot)))) (if r (setq python-pytest-executable (concat PYTHONPATH= r   pytest)) nil))) | flyspell-prog-mode | enable-jedi | (lambda nil (add-to-list 'write-file-functions 'delete-trailing-whitespace)) | flycheck-mode |
+
+* fix xdg-open
+#+begin_src emacs-lisp
+  (setq org-file-apps-gnu
+        (append '((t . "setsid -w xdg-open %s")) org-file-apps-gnu))
+#+end_src
+
+* Web-dev
+#+begin_src emacs-lisp
+
+  (use-package json-mode
+    :ensure t)
+
+  ;; web mode
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (use-package web-mode
+    :ensure t
+    :init
+           (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+  )
+
+  (use-package rainbow-mode
+    :ensure t
+    :init
+      (add-hook 'prog-mode-hook 'rainbow-mode))
+#+end_src
+
+* Rainbow Delimiter
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :ensure t
+    :init
+      (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+#+end_src
+
+* Expand Region
+#+begin_src emacs-lisp
+  (use-package expand-region
+    :ensure t
+    :bind ("C-q" . er/expand-region))
+#+end_src
+
+* zero-dark-them
+#+begin_src emacs-lisp 
+  (use-package zerodark-theme
+    :ensure t
+    :init
+      (load-theme 'zerodark t))
+
+  (let ((class '((class color) (min-colors 89)))
+        (default (if (true-color-p) "#abb2bf" "#afafaf"))
+        (light (if (true-color-p) "#ccd4e3" "#d7d7d7"))
+        (background (if (true-color-p) "#282c34" "#333333"))
+        (background-dark (if (true-color-p) "#24282f" "#222222"))
+        (background-darker (if (true-color-p) "#22252c" "#222222"))
+        (mode-line-inactive (if "#1c2129" "#222222"))
+        (mode-line-active (if (true-color-p) "#6f337e" "#875f87"))
+        (background-lighter (if (true-color-p) "#3a3f4b" "#5f5f5f"))
+        (background-red (if (true-color-p) "#4c3840" "#5f5f5f"))
+        (bright-background-red (if (true-color-p) "#744a5b" "#744a5b"))
+        (background-purple (if (true-color-p) "#48384c" "#5f5f5f"))
+        (background-blue (if (true-color-p) "#38394c" "#444444"))
+        (bright-background-blue (if (true-color-p) "#4e5079" "#4e5079"))
+        (background-green (if (true-color-p) "#3d4a41" "#5f5f5f"))
+        (bright-background-green (if (true-color-p) "#3f6d54" "#3f6d54"))
+        (background-orange (if (true-color-p) "#4a473d" "#5f5f5f"))
+        (hl-line (if (true-color-p) "#2c323b" "#333333"))
+        (grey (if (true-color-p) "#cccccc" "#cccccc"))
+        (grey-dark (if (true-color-p) "#666666" "#666666"))
+        (highlight (if (true-color-p) "#3e4451" "#5f5f5f"))
+        (comment (if (true-color-p) "#687080" "#707070"))
+        (orange (if (true-color-p) "#da8548" "#d7875f"))
+        (orange-light (if (true-color-p) "#ddbd78" "#d7af87"))
+        (red (if (true-color-p) "#ff6c6b" "#ff5f5f"))
+        (purple (if (true-color-p) "#c678dd" "#d787d7"))
+        (purple-dark (if (true-color-p) "#64446d" "#5f5f5f"))
+        (blue (if (true-color-p) "#61afef" "#5fafff"))
+        (blue-dark (if (true-color-p) "#1f5582" "#005f87"))
+        (green (if (true-color-p) "#98be65" "#87af5f"))
+        (green-light (if (true-color-p) "#9eac8c" "#afaf87"))
+        (peach "PeachPuff3")
+        (diff-added-background (if (true-color-p) "#284437" "#284437"))
+        (diff-added-refined-background (if (true-color-p) "#1e8967" "#1e8967"))
+        (diff-removed-background (if (true-color-p) "#583333" "#580000"))
+        (diff-removed-refined-background (if (true-color-p) "#b33c49" "#b33c49"))
+        (diff-current-background (if (true-color-p) "#29457b" "#29457b"))
+        (diff-current-refined-background (if (true-color-p) "#4174ae" "#4174ae")))
+
+    (custom-theme-set-faces
+     'zerodark
+
+     `(fancy-battery-charging ((,class (:background ,background-blue :height 1.0 :bold t))))
+     `(fancy-battery-discharging ((,class (:background ,background-blue :height 1.0))))
+     `(fancy-battery-critical ((,class (:background ,background-blue :height 1.0))))
+   
+     ;; mode line stuff
+     `(mode-line ((,class (:background ,background-blue :height 1.0 :foreground ,blue
+                                       :distant-foreground ,background-blue
+                                       :box ,(when zerodark-use-paddings-in-mode-line
+                                               (list :line-width 6 :color background-blue))))))
+   
+     `(mode-line-inactive ((,class (:background ,background-blue :height 1.0 :foreground ,default
+                                                :distant-foreground ,background-blue
+                                                :box ,(when zerodark-use-paddings-in-mode-line
+                                                        (list :line-width 6 :color background-blue))))))
+
+     `(header-line ((,class (:inherit mode-line-inactive))))
+
+     `(powerline-active0 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+                                           :distant-foreground ,background-blue))))
+     `(powerline-active1 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+                                           :distant-foreground ,background-blue))))
+     `(powerline-active2 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+                                           :distant-foreground ,background-blue))))
+     `(powerline-inactive0 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+                                             :distant-foreground ,background-blue))))
+     `(powerline-inactive1 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+                                             distant-foreground ,background-blue))))
+     `(powerline-inactive2 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+                                             :distant-foreground ,background-blue))))
+
+     `(dashboard-heading-face ((,class (:background ,background :foreground ,blue
+                                                    :bold t :height 1.2))))
+     `(dashboard-banner-logo-title-face ((,class (:background ,background :foreground ,blue
+                                                              :bold t :height 1.2))))
+     `(widget-button ((,class (:background ,background :foreground ,default :bold nil
+                                           :underline t :height 0.9))))
+   
+     ;; erc stuff
+     `(erc-nick-default-face ((,class :foreground ,blue :background ,background :weight bold)))
+
+     ;; org stuff
+     `(outline-1 ((,class (:foreground ,blue :weight bold :height 1.8 :bold nil))))
+     `(outline-2 ((,class (:foreground ,purple :weight bold :height 1.7 :bold nil))))
+     `(outline-3 ((,class (:foreground ,peach :weight bold :height 1.6 :bold nil))))
+     `(outline-4 ((,class (:foreground ,green-light :weight bold :height 1.5 :bold nil))))
+     `(outline-5 ((,class (:foreground ,blue :weight bold :height 1.4 :bold nil))))
+     `(outline-6 ((,class (:foreground ,purple :weight bold :height 1.3 :bold nil))))
+     `(outline-7 ((,class (:foreground ,peach :weight bold :height 1.2 :bold nil))))
+     `(outline-8 ((,class (:foreground ,green-light :weight bold :height 1.1 :bold nil))))
+   
+     `(org-block-begin-line ((,class (:background ,background-blue :foreground ,blue
+                                                  :bold t :height 1.0))))
+     `(org-block-end-line ((,class (:background ,background-blue :foreground ,blue
+                                                :bold t :height 1.0))))))
+#+end_src
+
+* Diminish modes
+#+begin_src emacs-lisp
+  (use-package diminish
+    :ensure t
+    :init
+    (diminish 'which-key-mode)
+    (diminish 'linum-relative-mode)
+    (diminish 'hungry-delete-mode)
+    (diminish 'visual-line-mode)
+    (diminish 'subword-mode)
+    (diminish 'beacon-mode)
+    (diminish 'irony-mode)
+    (diminish 'page-break-lines-mode)
+    (diminish 'auto-revert-mode)
+    (diminish 'rainbow-delimiters-mode)
+    (diminish 'rainbow-mode)
+    (diminish 'yas-minor-mode)
+    (diminish 'flycheck-mode)
+    (diminish 'helm-mode))
+#+end_src
+
+* Dap
+#+begin_src emacs-lisp
+  (use-package dap-mode
+    :ensure t)
+#+end_src
+* LSP-react-typescript
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :config (add-hook 'prog-mode-hook #'lsp)
+              (setq gc-cons-threshold (* 100 1024 1024)
+                  read-process-output-max (* 1024 1024)
+                  company-idle-delay 0.0
+                  company-minimum-prefix-length 1
+                  create-lockfiles nil) ;; lock files will kill `npm start'
+              (with-eval-after-load 'lsp-mode
+                  (require 'dap-chrome)
+                  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+              )
+              (with-eval-after-load 'js
+                (define-key js-mode-map (kbd "M-.") nil)
+               ))
+#+end_src
+* LSP-tailwindcss
+#+begin_src emacs-lisp
+  (use-package lsp-tailwindcss
+    :ensure t
+    :init
+    (setq lsp-tailwindcss-add-on-mode t))
+#+end_src
