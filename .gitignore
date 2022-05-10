@@ -1,4 +1,5 @@
 .cache/
+init.el
 elpa/
 emacsconfig.el
 projectile-bookmarks.eld
