@@ -1,20 +1,21 @@
-* General
+* Generals
 #+begin_src emacs-lisp
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (auto-save-mode -1)
   ;;  (custom-set-variables
-  ;;  '(initial-frame-alist (quote ((fullscreen . maximized)))))  
+  ;;  '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
-  (defun fullscreen ()
-         (interactive)
-         (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                   '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
-  (fullscreen)
+  ;;(defun fullscreen ()
+  ;;       (interactive)
+  ;;       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+  ;;                 '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
+  ;;(fullscreen)
   (setq make-backup-files -1)
   (setq make-backup-files nil)
   (setq auto-save-default nil)
+  (global-set-key "\C-ca" 'org-agenda)
 
 #+end_src
 * Terminal
@@ -416,7 +417,7 @@
   (add-hook 'prog-mode-hook 'linum-mode)
 #+end_src
 
-* Hel
+* Helm
 #+begin_src emacs-lisp
   (use-package helm
     :ensure t
@@ -449,7 +450,7 @@
     :init
     (helm-mode 1))
 
-  (require 'helm-config)
+  ;;(require 'helm-config)
   (helm-autoresize-mode 1)
   (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
@@ -836,7 +837,7 @@
 #+end_src
 
 * zero-dark-them
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (use-package zerodark-theme
     :ensure t
     :init
@@ -887,13 +888,13 @@
      `(fancy-battery-charging ((,class (:background ,background-blue :height 1.0 :bold t))))
      `(fancy-battery-discharging ((,class (:background ,background-blue :height 1.0))))
      `(fancy-battery-critical ((,class (:background ,background-blue :height 1.0))))
-   
+
      ;; mode line stuff
      `(mode-line ((,class (:background ,background-blue :height 1.0 :foreground ,blue
                                        :distant-foreground ,background-blue
                                        :box ,(when zerodark-use-paddings-in-mode-line
                                                (list :line-width 6 :color background-blue))))))
-   
+
      `(mode-line-inactive ((,class (:background ,background-blue :height 1.0 :foreground ,default
                                                 :distant-foreground ,background-blue
                                                 :box ,(when zerodark-use-paddings-in-mode-line
@@ -920,7 +921,7 @@
                                                               :bold t :height 1.2))))
      `(widget-button ((,class (:background ,background :foreground ,default :bold nil
                                            :underline t :height 0.9))))
-   
+
      ;; erc stuff
      `(erc-nick-default-face ((,class :foreground ,blue :background ,background :weight bold)))
 
@@ -933,7 +934,7 @@
      `(outline-6 ((,class (:foreground ,purple :weight bold :height 1.3 :bold nil))))
      `(outline-7 ((,class (:foreground ,peach :weight bold :height 1.2 :bold nil))))
      `(outline-8 ((,class (:foreground ,green-light :weight bold :height 1.1 :bold nil))))
-   
+
      `(org-block-begin-line ((,class (:background ,background-blue :foreground ,blue
                                                   :bold t :height 1.0))))
      `(org-block-end-line ((,class (:background ,background-blue :foreground ,blue
